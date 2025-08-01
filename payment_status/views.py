@@ -8,7 +8,6 @@ from .serializers import PaymentStatusSerializer
 
 # Create your views here.
 from django.db import IntegrityError
-
 class PaymentsView(APIView):
     def get(self, request):
         payments = PaymentStatus.objects.all().order_by('-id')
@@ -16,30 +15,27 @@ class PaymentsView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        data = request.data
+        item = request.data  # теперь это один объект, а не массив
 
-        if not isinstance(data, list):
-            return Response({"error": "Expected a list"}, status=400)
+        try:
+            payment, created = PaymentStatus.objects.update_or_create(
+                requestId=item.get("transactionId"),
+                defaults={
+                    "timestamp": item.get("transactionDate"),
+                    "status": item.get("status"),
+                    "amount": item.get("amount"),
+                    "paymentMethod": item.get("transactionType")
+                }
+            )
+            return Response({
+                "message": "Created" if created else "Updated",
+                "requestId": payment.requestId
+            }, status=201)
 
-        saved, skipped = 0, 0
-        for item in data:
-            try:
-                PaymentStatus.objects.create(
-                    requestId=item.get("transactionId"),
-                    timestamp=item.get("transactionDate"),
-                    status=item.get("status"),
-                    amount=item.get("amount"),
-                    paymentMethod=item.get("transactionType")
-                )
-                saved += 1
-            except IntegrityError:
-                skipped += 1
-
-        return Response({
-            "message": "Saved",
-            "saved": saved,
-            "skipped_due_to_duplicate": skipped
-        }, status=201)
+        except Exception as e:
+            return Response({
+                "error": str(e)
+            }, status=400)
 
 class PaymentsCreateView(generics.CreateAPIView):
     queryset = PaymentStatus.objects.all()
