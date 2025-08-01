@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     
     # apps
     'orders',
-    'users'  # Assuming you have a users app
+    'users',
+    'payment_status' 
 ]
 
 MIDDLEWARE = [
