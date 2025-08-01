@@ -5,7 +5,8 @@ class Order(models.Model):
   phone_number = models.CharField(max_length=50)
   address = models.TextField()
   summa = models.FloatField()
-  status = models.CharField(default='На доставку')
+  status = models.CharField(default='В ожидании')
+  deliver = models.CharField(max_length=255, default='Без курьера')
   created_at = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
