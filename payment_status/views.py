@@ -5,5 +5,9 @@ from .serializers import PaymentStatusSerializer
 
 # Create your views here.
 class PaymentsView(generics.ListAPIView):
-  queryset = PaymentStatus.objects.all()
-  serializer_class = PaymentStatusSerializer
+    queryset = PaymentStatus.objects.all()
+    serializer_class = PaymentStatusSerializer
+
+class PaymentsCreateView(generics.CreateAPIView):
+    queryset = PaymentStatus.objects.all()
+    serializer_class = PaymentStatusSerializer
