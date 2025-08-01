@@ -14,7 +14,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
       model = Order
-      fields = ['id', 'customer_name', 'phone_number', 'address', 'summa', 'deliver', 'created_at', 'items', 'status']
+      fields = ['id', 'customer_name', 'phone_number', 'address', 'summa', 'deliver', 'created_at', 'items', 'status', 'type_payment']
 
     def create(self, validated_data):
       items_data = validated_data.pop('items')
@@ -33,6 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
       instance.summa = validated_data.get('summa', instance.summa)
       instance.status = validated_data.get('status', instance.status)
       instance.deliver = validated_data.get('deliver', instance.deliver)
+      instance.type_payment = validated_data.get('type_payment', instance.type_payment)
       instance.save()
 
       # удалим старые товары

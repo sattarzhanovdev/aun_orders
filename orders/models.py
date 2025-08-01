@@ -7,6 +7,7 @@ class Order(models.Model):
   summa = models.FloatField()
   status = models.CharField(default='В ожидании')
   deliver = models.CharField(max_length=255, default='Без курьера')
+  type_payment = models.CharField(max_length=255, default='Наличные')
   created_at = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
